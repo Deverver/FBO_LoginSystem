@@ -35,14 +35,15 @@ public class LoginSystem {
     public static void main(String[] args) {
 
         // Initialises data used in the program for testing
-        boolean appIsRunning = true;
-        short loginAttempts = 0;
+        short maxLoginAttempts = 2;
+        short nameLoginAttempts;
+        short passwordLoginAttempts;
         boolean nameDataMatch;
         boolean passwordDataMatch;
         int userKey;
         String userVal;
 
-
+        // Our "Database"
         String[] userNameDB = new String[4];
         userNameDB[0] = "John";
         userNameDB[1] = "Jack";
@@ -59,27 +60,40 @@ public class LoginSystem {
         // Start of program
         startAppMessage();
 
-        do {
+        for (nameLoginAttempts = 0; nameLoginAttempts <= maxLoginAttempts; nameLoginAttempts++) {
             String userName = userNameInput();
-            nameDataMatch = dataIsValid(userNameDB, userName);
+            nameDataMatch = dataIsInDataBse(userNameDB, userName);
+
             if (nameDataMatch) {
+                foundMatchMessage();
                 userKey = getDataBaseID(userNameDB, userName);
-                String userPassword = userPasswordInput();
-                passwordDataMatch = dataIsValid(passwordDB, userPassword);
-                if (passwordDataMatch) {
-                    userVal = getDataBaseValue(passwordDB, userKey);
-                    loginSuccessMessage(userName, userKey, userPassword, userVal);
-                }
-            }
 
-            loginAttempts++;
-            if (loginAttempts == 3){
+                for (passwordLoginAttempts = 0; passwordLoginAttempts <= maxLoginAttempts; passwordLoginAttempts++){
+
+                    if (userName.equals(userNameDB[userKey])) {
+                        String userPassword = userPasswordInput();
+                        passwordDataMatch = dataIsInDataBse(passwordDB, userPassword);
+
+                        if (passwordDataMatch && userPassword.equals(passwordDB[userKey])) {
+                            foundMatchMessage();
+                            userVal = getDataBaseValue(passwordDB, userKey);
+
+                            if (userName.equals(userNameDB[userKey]) && userPassword.equals(passwordDB[userKey])) {
+                                loginSuccessMessage(userName, userKey, userPassword, userVal);
+                                break;
+                            }
+                        } else {
+                            foundNoMatchMessage(passwordLoginAttempts, maxLoginAttempts);
+                        }
+                    }
+                }// end for loop
                 closeAppMessage();
-                appIsRunning = false;
+
+            } else {
+                foundNoMatchMessage(nameLoginAttempts, maxLoginAttempts);
             }
-        } while (appIsRunning);
-
-
+        }// end for loop
+        closeAppMessage();
 
     }// Main End
 
@@ -94,6 +108,18 @@ public class LoginSystem {
         System.out.println("""
                 Max login attempts reached
                 Closing down...""");
+        System.exit(0);
+    }
+
+    public static void foundNoMatchMessage(short loginAttempts, short maxLoginAttempts) {
+        int attemptsLeft = maxLoginAttempts - loginAttempts;
+        System.out.println("Match Not Found");
+        System.out.println("You have: " + attemptsLeft + " login attempts remaining");
+    }
+
+    public static void foundMatchMessage() {
+        System.out.println("Match Found");
+        System.out.println("System proceeding...");
     }
 
     public static void loginSuccessMessage(String userName, int idKey, String userPassword, String userVal) {
@@ -109,19 +135,23 @@ public class LoginSystem {
         Scanner userInput = new Scanner(System.in);
         System.out.println("Please enter your Username");
         return userInput.next();
-    }// gets a String as input for username
+    }// Gets a String as input for username
 
-    public static boolean dataIsValid(String[] dataBase, String userInput) {
+    public static String userPasswordInput() {
+        Scanner userInput = new Scanner(System.in);
+        System.out.println("Please enter your Password");
+        return userInput.next();
+    }// Gets a String as input for user password
+
+    public static boolean dataIsInDataBse(String[] dataBase, String userInput) {
         System.out.println("Checking DataBase...");
         for (String index : dataBase) {
             if (index.equals(userInput)) {
-                System.out.println("Match Found");
                 return true;
             }
         }
-        System.out.println("Match Not Found");
         return false;
-    }// checks if input data can be found in array
+    }// Checks if input data can be found in array
 
     public static int getDataBaseID(String[] dataBase, String userKey) {
         int foundID = -1;
@@ -132,17 +162,11 @@ public class LoginSystem {
             }
         }
         return foundID;
-    }// getDataBaseID End
-
-    public static String userPasswordInput() {
-        Scanner userInput = new Scanner(System.in);
-        System.out.println("Please enter your Password");
-        return userInput.next();
-    }// userPasswordInput End
+    }// Gets the index of string array based on string input
 
     public static String getDataBaseValue(String[] dataBase, int keyIndex) {
         return dataBase[keyIndex];
-    }
+    }// Get the valure of array via index input
 
 
 }// Class End
