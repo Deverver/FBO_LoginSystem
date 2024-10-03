@@ -1,6 +1,5 @@
 /*
 Opgave: Login system
-
 Et array til brugernavne.
 Et array til adgangskoder.
 
@@ -21,12 +20,6 @@ Output:
 Hvis login er succesfuld, vis en velkomstbesked.
 Hvis brugeren mislykkes tre gange, vis en besked om, at kontoen er låst.
 
-Tips og Tricks:
-Brug Scanner klassen til at indlæse input fra brugeren.
-Brug en for-loop til at tillade op til tre login forsøg.
-Brug Arrays.equals metode til at sammenligne adgangskoder.
-Sørg for at adskille logikken i forskellige metoder for-
-at gøre koden mere struktureret og lettere at vedligeholde.
  */
 
 import java.util.Scanner;
@@ -80,7 +73,7 @@ public class LoginSystem {
 
                             if (userName.equals(userNameDB[userKey]) && userPassword.equals(passwordDB[userKey])) {
                                 loginSuccessMessage(userName, userKey, userPassword, userVal);
-                                break;
+                                System.exit(0);
                             }
                         } else {
                             foundNoMatchMessage(passwordLoginAttempts, maxLoginAttempts);
