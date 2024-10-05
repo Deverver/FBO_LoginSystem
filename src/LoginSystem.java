@@ -1,27 +1,3 @@
-/*
-Opgave: Login system
-Et array til brugernavne.
-Et array til adgangskoder.
-
-Brugerinput:
-Bed brugeren om at indtaste deres brugernavn.
-Bed brugeren om at indtaste deres adgangskode.
-
-Validering:
-Check om brugernavnet findes i array.
-Hvis brugernavnet findes, valider adgangskoden.
-Brugeren har maksimalt tre forsøg til at indtaste den korrekte adgangskode.
-
-Metoder:
-En metode til at validere brugernavn og adgangskode.
-En metode til at håndtere login forsøg.
-
-Output:
-Hvis login er succesfuld, vis en velkomstbesked.
-Hvis brugeren mislykkes tre gange, vis en besked om, at kontoen er låst.
-
- */
-
 import java.util.Scanner;
 
 public class LoginSystem {
@@ -37,18 +13,8 @@ public class LoginSystem {
         String userVal;
 
         // Our "Database"
-        String[] userNameDB = new String[4];
-        userNameDB[0] = "John";
-        userNameDB[1] = "Jack";
-        userNameDB[2] = "Jones";
-        userNameDB[3] = "Jimmy";
-
-        String[] passwordDB = new String[4];
-        passwordDB[0] = "0000";
-        passwordDB[1] = "1111";
-        passwordDB[2] = "2222";
-        passwordDB[3] = "3333";
-
+        String[] userNameDB = {"John", "Jack", "Jones", "Jimmy"};
+        String[] passwordDB = {"0000", "1111", "2222", "3333"};
 
         // Start of program
         startAppMessage();
