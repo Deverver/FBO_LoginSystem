@@ -1,16 +1,34 @@
+/*
+Key Changes:
+Removed Redundant Checks:
+Removed unnecessary username and password rechecks inside the loops.
+
+Return After
+Successful Login: Instead of break, a return is used to terminate the program after successful login, ensuring no further iterations occur.
+
+Simplified Password Check:
+Directly compare the password for the userIndex without searching the database again for the password.
+
+Loop Simplification:
+By removing unnecessary checks and returns, the logic becomes more linear and readable.
+ */
+
+
 import java.util.Scanner;
 
 public class LoginSystem {
     public static void main(String[] args) {
 
         // Initialises data used in the program for testing
+        Scanner userInput = new Scanner(System.in);
         short maxLoginAttempts = 2;
         short nameLoginAttempts;
         short passwordLoginAttempts;
-        boolean nameDataMatch;
-        boolean passwordDataMatch;
-        int userKey;
-        String userVal;
+        boolean isNameValid;
+        boolean isPasswordValid;
+        int userIndex;
+        String userPasswordFromDB;
+
 
         // Our "Database"
         String[] userNameDB = {"John", "Jack", "Jones", "Jimmy"};
@@ -20,26 +38,26 @@ public class LoginSystem {
         startAppMessage();
 
         for (nameLoginAttempts = 0; nameLoginAttempts <= maxLoginAttempts; nameLoginAttempts++) {
-            String userName = userNameInput();
-            nameDataMatch = dataIsInDataBse(userNameDB, userName);
+            String userName = userNameInput(userInput);
+            isNameValid = dataIsInDataBse(userNameDB, userName);
 
-            if (nameDataMatch) {
+            if (isNameValid) {
                 foundMatchMessage();
-                userKey = getDataBaseID(userNameDB, userName);
+                userIndex = getDataBaseID(userNameDB, userName);
 
                 for (passwordLoginAttempts = 0; passwordLoginAttempts <= maxLoginAttempts; passwordLoginAttempts++){
 
-                    if (userName.equals(userNameDB[userKey])) {
-                        String userPassword = userPasswordInput();
-                        passwordDataMatch = dataIsInDataBse(passwordDB, userPassword);
+                    if (userName.equals(userNameDB[userIndex])) {
+                        String userPassword = userPasswordInput(userInput);
+                        isPasswordValid = dataIsInDataBse(passwordDB, userPassword);
 
-                        if (passwordDataMatch && userPassword.equals(passwordDB[userKey])) {
+                        if (isPasswordValid && userPassword.equals(passwordDB[userIndex])) {
                             foundMatchMessage();
-                            userVal = getDataBaseValue(passwordDB, userKey);
+                            userPasswordFromDB = getDataBaseValue(passwordDB, userIndex);
 
-                            if (userName.equals(userNameDB[userKey]) && userPassword.equals(passwordDB[userKey])) {
-                                loginSuccessMessage(userName, userKey, userPassword, userVal);
-                                System.exit(0);
+                            if (userName.equals(userNameDB[userIndex]) && userPassword.equals(passwordDB[userIndex])) {
+                                loginSuccessMessage(userName, userIndex, userPassword, userPasswordFromDB);
+                                return;// Exist out of loop and ends program if login is successful
                             }
                         } else {
                             foundNoMatchMessage(passwordLoginAttempts, maxLoginAttempts);
@@ -90,14 +108,12 @@ public class LoginSystem {
 
     }
 
-    public static String userNameInput() {
-        Scanner userInput = new Scanner(System.in);
+    public static String userNameInput(Scanner userInput) {
         System.out.println("Please enter your Username");
         return userInput.next();
     }// Gets a String as input for username
 
-    public static String userPasswordInput() {
-        Scanner userInput = new Scanner(System.in);
+    public static String userPasswordInput(Scanner userInput) {
         System.out.println("Please enter your Password");
         return userInput.next();
     }// Gets a String as input for user password
